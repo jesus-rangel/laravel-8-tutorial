@@ -6,7 +6,8 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h3>{{ __('Stories') }}</h3>
+                    <h3 class="float-left">{{ __('Stories') }}</h3>
+                    <a href="{{ route('stories.create') }}" class="float-right">Add a Story</a>
                 </div>
 
                 <div class="card-body">
@@ -26,13 +27,26 @@
                                         {{ $story->title }}
                                     </td>
                                     <td>
-                                        {{ $story->type }}
+                                        {{ ucwords($story->type) }}
                                     </td>
                                     <td>
                                         {{ $story->status == 1 ? 'Yes' : 'No' }}
                                     </td>
                                     <td>
                                         <a href="{{ route('stories.show', [$story]) }}" class="btn btn-info text-light">View Story</a>
+                                        <a href="{{ route('stories.edit', [$story]) }}" class="btn btn-info text-light">
+                                            <i class="fas fa-pencil-alt fa-lg"></i>
+                                        </a>
+                                        <form 
+                                            action="{{ route('stories.destroy', [$story]) }}" method="post"
+                                            style="display: inline-block;"
+                                        >
+                                            @method('DELETE')
+                                            @csrf
+                                            <button type="submit" class="btn btn-info text-light">
+                                                <i class="fas fa-trash fa-lg"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StoriesController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -9,14 +11,18 @@ use App\Http\Controllers\StoriesController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
+
+// Laravel's original routes
+/* Route::get('/', function () {
     return view('welcome');
-});
+}); */
+
+
+Route::get('/', [LoginController::class, 'showLoginForm']);
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::group(['middleware' => ['auth']], function()
 {
     /* Route::get('stories', [StoriesController::class, 'index'])->name('stories.index');

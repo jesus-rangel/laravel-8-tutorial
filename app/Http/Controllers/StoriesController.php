@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Story;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoryRequest;
 
 class StoriesController extends Controller
 {
@@ -27,7 +28,9 @@ class StoriesController extends Controller
      */
     public function create()
     {
-        return view('stories.create');
+        // Dummy story for shared form layout
+        $story = new Story;
+        return view('stories.create', compact('story'));
     }
 
     /**
@@ -36,16 +39,10 @@ class StoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoryRequest $request)
     {
-        $data = $request->validate([
-            'title' => 'required',
-            'body' => 'required',
-            'type' => 'required',
-            'status' => 'required'
-        ]);
 
-        auth()->user()->stories()->create($data);
+        auth()->user()->stories()->create($request->all());
         return redirect()->route('stories.index')->with('status', 'Story created successfully');
     }
 
@@ -68,7 +65,7 @@ class StoriesController extends Controller
      */
     public function edit(Story $story)
     {
-        //
+        return view('stories.edit', compact('story'));
     }
 
     /**
@@ -78,9 +75,10 @@ class StoriesController extends Controller
      * @param  \App\Models\Story  $story
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Story $story)
+    public function update(StoryRequest $request, Story $story)
     {
-        //
+        $story->update($request->all());
+        return redirect()->route('stories.index')->with('status', 'Story edited successfully');
     }
 
     /**
@@ -91,6 +89,7 @@ class StoriesController extends Controller
      */
     public function destroy(Story $story)
     {
-        //
+        $story->delete();
+        return redirect()->route('stories.index')->with('status', 'Story deleted successfully');
     }
 }
